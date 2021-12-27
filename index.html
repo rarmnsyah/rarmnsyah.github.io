@@ -159,21 +159,29 @@
       </div>
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <form>
+          <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+            <strong>Thank You!</strong> Your Email Has Been Sent Succesfully! :D
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <form name="submit-to-google-sheet">
             <div class="mb-3">
               <label for="exampleInputName" class="form-label">Name</label>
-              <input type="text" class="form-control" id="exampleInputName1" />
+              <input type="text" class="form-control" id="exampleInputName1" name="nama" />
             </div>
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" />
               <div id="emailHelp" class="form-text">I'll never share your email with anyone else.</div>
             </div>
             <div class="mb-3">
               <label for="exampleFormControlTextarea1" class="form-label">Mail</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="pesan"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button><br /><br />
+            <button type="submit" class="btn btn-primary btn-kirim">Submit</button>
+            <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+              Loading...</button
+            ><br /><br />
             <div class="mb-3 col-md-4">
               <a href="https://github.com/rarmnsyah"><img class="social-media" align="left" alt="codeSTACKr | Github" width="30px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" /></a>
               <a href="https://twitter.com/rarmnsyah787"><img class="social-media" align="left" alt="codeSTACKr | Twitter" width="30px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/twitter.svg" /></a>
@@ -201,5 +209,27 @@
     <!-- End Footer -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzh8pU8OR_M6zCs7vBtJnKgndJljwCWqNtYo3n-Aeza8ezHmt4FXqsviXj_eDJWRhGG7A/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoading = document.querySelector(".btn-loading");
+      const myAlert = document.querySelector(".my-alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        btnLoading.classList.toggle("d-none");
+        btnKirim.classList.toggle("d-none");
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            console.log("Success!", response);
+            btnLoading.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+            myAlert.classList.toggle("d-none");
+            form.reset();
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
